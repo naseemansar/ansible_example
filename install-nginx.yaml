@@ -1,0 +1,41 @@
+---
+
+- hosts: all
+  tasks: 
+    - name: install nginx
+      package: name={{ item }} state=present
+   ##list all the items
+      with_items:
+       - nginx
+       - nano
+       - curl
+
+    - name: create website dorectory
+      file: path=/var/www/mywebsite state=directory mode=0755
+
+    - name: copy nginx config files (main config file and vhost config file)
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+         
+      with_items:
+       - src: "config/nginx.conf"
+         dest: "/etc/nginx/nginx.conf"
+       - src: "config/mywebsite.conf"
+         dest: "/etc/nginx/conf.d/mywebsite.conf"
+       - src: "config/index.html"
+         dest: "/var/www/mywebsite/index.html"
+     
+    - name:  check if default nginx vhost file still exists
+      stat: path=/etc/nginx/sites-enabled/default
+      register: default_conf
+
+    - name: remove default nginx vhost configuration
+      file: path=/etc/nginx/stite-enabled/defualt state=absent
+      when: default_conf.stat.exists
+
+    - name: start nginx at boot
+      service: name=nginx state=started enabled=yes

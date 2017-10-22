@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks: 
+   - name: manage keys for naseem user
+     authorized_key: 
+        user: naseem
+        state: present
+        exclusive: no
+        key: "{{ lookup('file','/home/naseem/.ssh/id_rsa.pub') }}"
+    

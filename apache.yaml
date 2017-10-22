@@ -1,0 +1,6 @@
+---
+
+- hosts: all
+  tasks:
+    - name: stopstart apache
+      service: name=httpd state=started enabled=yes

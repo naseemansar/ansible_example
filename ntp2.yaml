@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+  - name: install ntp
+    package: name=ntp state=present
+
+  - name: ensure ntp is running
+    service: name=ntpd state=started enabled=yes
+
+  #- name: check ntp package
+    #raw: rpm -qa | grep -w ntp

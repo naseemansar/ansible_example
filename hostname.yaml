@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+   - name: get host server name
+     #raw: cat /etc/hostname
+     command: cat /etc/sysconfig/network
+     register: my_output
+     

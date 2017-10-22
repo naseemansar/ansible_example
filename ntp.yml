@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+     - name: ensure ntp is installed
+       package: name=ntp state=present
+       tags: ntp
+     
+     - name: stop start ntp
+       service: name=ntpd state=started enabled=yes
+ 

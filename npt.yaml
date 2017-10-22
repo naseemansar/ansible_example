@@ -1,0 +1,43 @@
+---
+
+- hosts: cent4
+  vars:
+  #used for filepaths 
+  site_name: "linuxnuggets"
+  #used for website's markup
+  site_url: "www.linuxnuggets.com"
+
+  tasks:
+   - name: install nginx
+     package: name=nginx state=latest
+
+   - name: create website directory
+     file: path="/var/www/{{ site_name }}" state=directory mode=0755
+
+   - name: create main config file
+     template:
+       src: "templates/nginx.conf"
+       dest: "/etc/nginx/nginx.conf"
+     notify:
+     - restart nginx
+
+   - name: create nginx vhost config file
+     template:
+       src: "templates/websites.cinf"
+       dest: "/etc/nginx/conf.d/{{ site_name }}.conf"
+     notify:
+       - restart nginx
+
+   - name: cretae website
+     template:
+      src: "templates/index.html"
+      dest: "/var/www/{{ site_name}}/index.html"
+   - name: remove default nginx vhost
+     file: path=/etc/nginx/site-enabled/default state=absent
+     notify:
+     - restart nginx
+  handlers:
+   - name: restart nginx
+     service:
+       name: nginx
+       state: restarted

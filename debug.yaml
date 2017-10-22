@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:
+  - name: install ntp
+    package: name=ntp state=present
+
+  - name: ensure ntp is running
+    service: name=ntpd state=started enabled=yes
+    register: ntp_status
+  - name: ntp debugging
+    debug: var=ntp_status
+
+  #- name: check ntp package
+    #raw: rpm -qa | grep -w ntp
+  - name: create direcotry 
+    file: path=/tmp/naseem state=directory mode=0700
+    register: mydir
+
+  - name: debug dir
+    debug: var=mydir
+  - name: checkutime
+    shell: /usr/bin/uptime
+    register: my_uptime
+
+
+  - name: debug uptime
+    debug: var=my_uptime

@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+    - name:  install package
+      package: name={{ item }} state=present
+      #command: cat /etc/issue
+      with_items:
+         - rsync
+         - git
+   
+  
+ 
